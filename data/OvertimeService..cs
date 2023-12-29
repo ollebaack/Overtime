@@ -9,7 +9,7 @@ public class OvertimeService
     public OvertimeService()
     {
         _dbContext = new OvertimeDbContext();
-        _dbContext.Database.Migrate();
+        _dbContext.Database.EnsureCreated();
     }
 
     public void AddWorkedOvertime(WorkedOvertime workedOvertime)
