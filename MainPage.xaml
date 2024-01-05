@@ -3,10 +3,45 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Overtime.MainPage">
 
-    <StackLayout>
-        <Entry Placeholder="Hours" x:Name="hoursEntry" />
-        <Button Text="Save to JSON" Clicked="OnSaveClicked" />
-        <Button Text="Load from JSON" Clicked="OnShowClicked" />
-    </StackLayout>
+    <AbsoluteLayout>
+        <!-- Other content -->
+        <StackLayout Padding="20" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+
+            <Entry Placeholder="Enter Hours" x:Name="hoursEntry" Keyboard="Numeric" Margin="0,0,0,20" Completed="OnEntryCompleted" />
+
+            <Button x:Name="saveButton" Text="Add Overtime" Clicked="OnSaveClicked" />
+
+            <Label 
+                Text="{Binding TotalSum, StringFormat='Total Hours: {0}'}"
+                HorizontalOptions="CenterAndExpand"
+                VerticalOptions="CenterAndExpand" />
+
+            <ListView x:Name="overtimeListView" HasUnevenRows="True" VerticalOptions="FillAndExpand">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Margin="10">
+                                <Label Text="{Binding Hours, StringFormat='Hours: {0}'}" FontAttributes="Bold" />
+                                <Label Text="{Binding Date, StringFormat='Date: {0:d}'}" />
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+        </StackLayout>
+
+        <!-- Overlay Label -->
+        <Label x:Name="successLabel"
+               Text=""
+               IsVisible="false"
+               TextColor="Green"
+               AbsoluteLayout.LayoutFlags="PositionProportional"
+               AbsoluteLayout.LayoutBounds="1,1,-1,-1"
+               BackgroundColor="Transparent"
+               HorizontalOptions="End"
+               VerticalOptions="End">
+        </Label>
+    </AbsoluteLayout>
 
 </ContentPage>

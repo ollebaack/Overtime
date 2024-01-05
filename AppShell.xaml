@@ -8,7 +8,7 @@
     Title="Overtime">
 
     <ShellContent
-        Title="Home"
+        Title="Overtime Tracker"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
 

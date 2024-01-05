@@ -18,8 +18,8 @@ public class OvertimeService
         _dbContext.SaveChanges();
     }
 
-    public List<WorkedOvertime> GetAllWorkedOvertimes()
-    {
-        return _dbContext.WorkedOvertimes.ToList();
-    }
+    public List<WorkedOvertime> GetAllWorkedOvertimes() => 
+        _dbContext.WorkedOvertimes
+            .OrderByDescending(overtime => overtime.Id)
+            .ToList();
 }
