@@ -9,26 +9,46 @@
 
             <Entry Placeholder="Enter Hours" x:Name="hoursEntry" Keyboard="Numeric" Margin="0,0,0,20" Completed="OnEntryCompleted" />
 
-            <Button x:Name="saveButton" Text="Add Overtime" Clicked="OnSaveClicked" />
+            <Button x:Name="saveButton" Text="Add Overtime" Clicked="OnSaveClickedAsync" />
 
-            <Label 
-                Text="{Binding TotalSum, StringFormat='Total Hours: {0}'}"
-                HorizontalOptions="CenterAndExpand"
-                VerticalOptions="CenterAndExpand" />
+            <StackLayout>
+                <Label
+                    Margin="10"
+                    Style="{StaticResource Headline}" 
+                    Text="Total Overtime" />
+ 
+                <Label 
+                    Margin="10"
+                    Style="{StaticResource SubHeadline}"
+                    Text="{Binding TotalSum, StringFormat='{0}'}"
+                    HorizontalOptions="CenterAndExpand"
+                    VerticalOptions="CenterAndExpand" />
+            </StackLayout>
 
             <ListView x:Name="overtimeListView" HasUnevenRows="True" VerticalOptions="FillAndExpand">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Margin="10">
-                                <Label Text="{Binding Hours, StringFormat='Hours: {0}'}" FontAttributes="Bold" />
-                                <Label Text="{Binding Date, StringFormat='Date: {0:d}'}" />
-                            </StackLayout>
+                            <Grid Margin="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackLayout Grid.Column="0">
+                                    <Label Text="{Binding Hours, StringFormat='Hours: {0}'}" />
+                                    
+                                    <Label Text="{Binding Date, StringFormat='Date: {0:d}'}" />
+                                </StackLayout>
+
+                                <StackLayout Grid.Column="1" HorizontalOptions="EndAndExpand">
+                                    <Button Text="Delete" Clicked="OnDeleteClickedAsync" CommandParameter="{Binding .}" />
+                                </StackLayout>
+                            </Grid>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-
         </StackLayout>
 
         <!-- Overlay Label -->

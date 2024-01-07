@@ -18,6 +18,12 @@ public class OvertimeService
         _dbContext.SaveChanges();
     }
 
+    public void DeleteWorkedOvertime(WorkedOvertime workedOvertime)
+    {
+        _dbContext.WorkedOvertimes.Remove(workedOvertime);
+        _dbContext.SaveChanges();
+    }
+
     public List<WorkedOvertime> GetAllWorkedOvertimes() => 
         _dbContext.WorkedOvertimes
             .OrderByDescending(overtime => overtime.Id)
