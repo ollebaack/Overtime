@@ -51,7 +51,7 @@ public partial class MainPage : ContentPage
 
 	private async void OnSaveClickedAsync(object sender, EventArgs e)
 	{
-		if (int.TryParse(hoursEntry.Text, out int hours) && hours > 0)
+		if (double.TryParse(hoursEntry.Text, out double hours) && hours > 0)
         {
             WorkedOvertime newWorkedOvertime = new(hours, DateTime.Now);
             _overtimeService.AddWorkedOvertime(newWorkedOvertime);
