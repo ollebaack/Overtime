@@ -12,8 +12,8 @@
     </FlyoutItem>
 
     <!-- Your New Page -->
-    <FlyoutItem Title="New Page" Icon="icon_tab2.png">
-        <ShellContent ContentTemplate="{DataTemplate local:MyNewPage}" />
+    <FlyoutItem Title="Backup" Icon="icon_tab2.png">
+        <ShellContent ContentTemplate="{DataTemplate local:BackupPage}" />
     </FlyoutItem>
 
 </Shell>

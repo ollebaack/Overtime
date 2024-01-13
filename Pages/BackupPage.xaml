@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Overtime.BackupPage">
+
+    <AbsoluteLayout>
+        <StackLayout Padding="20" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+
+            <Label Text="Enter Backup Path:" />
+            <Entry x:Name="backupPathEntry" Placeholder="Enter backup path" Completed="OnEntryCompleted" />
+
+            <Button Text="Backup" Clicked="OnBackupClicked" />
+
+        </StackLayout>
+
+        <!-- Overlay Label -->
+        <Label x:Name="successLabel"
+               Text=""
+               IsVisible="false"
+               TextColor="Green"
+               AbsoluteLayout.LayoutFlags="PositionProportional"
+               AbsoluteLayout.LayoutBounds="1,1,-1,-1"
+               BackgroundColor="Transparent"
+               HorizontalOptions="End"
+               VerticalOptions="End">
+        </Label>
+    </AbsoluteLayout>
+
+</ContentPage>

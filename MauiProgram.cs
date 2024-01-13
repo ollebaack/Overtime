@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using DotNet.Meteor.HotReload.Plugin;
+using Microsoft.Extensions.Logging;
 
 namespace Overtime;
 
@@ -16,7 +17,9 @@ public static class MauiProgram
 			});
 
 #if DEBUG
-		builder.Logging.AddDebug();
+        builder
+			.EnableHotReload()
+			.Logging.AddDebug();
 #endif
 
 		return builder.Build();

@@ -9,7 +9,7 @@ public class OvertimeDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "OvertimeDb.db3");
+        string dbPath = GetDatabaseSourcePath();
 
         // Check if the database file exists
         if (!File.Exists(dbPath))
@@ -27,5 +27,10 @@ public class OvertimeDbContext : DbContext
                     .EnableSensitiveDataLogging()
                     .EnableDetailedErrors()
                     .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddDebug()));
+    }
+
+    public static string GetDatabaseSourcePath()
+    {
+        return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "OvertimeDb.db3");
     }
 }
