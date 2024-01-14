@@ -40,24 +40,23 @@ public partial class MainPage : ContentPage
 
 	private void LoadWorkedOvertimes()
 	{
-		foreach (var item in _overtimeService.GetAllWorkedOvertimes())
+		foreach (var item in _overtimeService.GetAll())
 		{
 			overtimeItems.Add(item);
 		}
 
 		// Calculate the total sum and update the property
-		TotalSum = overtimeItems.Sum(item => item.Hours);
+		TotalSum = GetSum();
 	}
 
 	private async void OnSaveClickedAsync(object sender, EventArgs e)
 	{
 		if (double.TryParse(hoursEntry.Text, out double hours) && hours > 0)
         {
-            WorkedOvertime newWorkedOvertime = new(hours, DateTime.Now);
-            _overtimeService.AddWorkedOvertime(newWorkedOvertime);
+            var addedItem = await _overtimeService.AddAsync(new(hours, DateTime.Now));
             hoursEntry.Text = "";
 
-			await OvertimeItemAddAsync(newWorkedOvertime);
+			await OvertimeItemAddAsync(addedItem);
         }
         else
 		{
@@ -67,25 +66,46 @@ public partial class MainPage : ContentPage
 	}
 
 
-    private async void OnDeleteClickedAsync(object sender, EventArgs e)
+	private async void OnDeleteClickedAsync(object sender, EventArgs e)
 	{
 		var button = sender as Button;
-		var item = button?.CommandParameter as WorkedOvertime; // Replace YourItemType with the actual type of items in your list
+		var item = button?.CommandParameter as WorkedOvertime;
 
 		if (item is not null)
 		{
 			try
 			{
-				_overtimeService.DeleteWorkedOvertime(item);
+				// Update the UI (remove the item from the ObservableCollection)
 				await OvertimeItemDeleteAsync(item);
 			}
 			catch (Exception ex)
 			{
-				// Handle the exception (e.g., log or show an error message)
+				// Handle the exception
 				await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
 			}
 		}
+	}
+
+    private async void OnUndoDeleteClickedAsync(object sender, EventArgs e)
+    {
+		var button = sender as Button;
+		var item = button?.CommandParameter as WorkedOvertime;
+
+		if (item is not null)
+		{
+			try
+			{
+        		await OvertimeItemUndoDeletedAsync(item);
+			}
+			catch (Exception ex)
+			{
+				// Handle the exception
+				await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
+			}
+		}
+
     }
+
     private async Task ShowSuccesLabelAsync(string message)
     {
         // Display a success message using a Label
@@ -104,11 +124,31 @@ public partial class MainPage : ContentPage
 
     private async Task OvertimeItemDeleteAsync(WorkedOvertime item)
     {
-        overtimeItems.Remove(item);
-        // Calculate the total sum and update the property
-        TotalSum = overtimeItems.Sum(item => item.Hours);
-		await ShowSuccesLabelAsync($"Overtime with {item.Hours} hours was removed.");
+		var deletedItem = await _overtimeService.DeleteAsync(item);
+        var deletedOvertimeItem = overtimeItems.FirstOrDefault(i => i.Id == item.Id);
+
+		if (deletedOvertimeItem != null)
+		{
+			deletedOvertimeItem.Deleted = true;
+
+			// Calculate the total sum and update the property
+			TotalSum = GetSum();
+			await ShowSuccesLabelAsync($"Overtime with {item.Hours} hours was removed.");
+		}
     }
+
+
+    private async Task OvertimeItemUndoDeletedAsync(WorkedOvertime item)
+	{
+		var unDeletedItem = await _overtimeService.UndoDeleteAsync(item);
+
+		item.Deleted = false;
+
+		// Calculate the total sum and update the property
+		TotalSum = GetSum();
+
+		await ShowSuccesLabelAsync($"Overtime with {item.Hours} hours was successfully un removed.");
+	}
 
 	private async Task OvertimeItemAddAsync(WorkedOvertime item)
     {
@@ -116,10 +156,14 @@ public partial class MainPage : ContentPage
 		overtimeItems.Insert(0, item);
 
 		// Calculate the total sum and update the property
-		TotalSum = overtimeItems.Sum(item => item.Hours);
+		TotalSum = GetSum();
 
 		await ShowSuccesLabelAsync($"Overtime of {item.Hours} hours successfully added.");
     }
+    private double GetSum() 
+		=> overtimeItems
+            .Where(x => !x.Deleted)
+            .Sum(item => item.Hours);
 
     private void OnEntryCompleted(object sender, EventArgs e) => OnSaveClickedAsync(sender, e);
 }

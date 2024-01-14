@@ -2,21 +2,24 @@
 
 public partial class App : Application
 {
+	private readonly OvertimeService _overtimeService = new();
+	
 	public App()
 	{
 		InitializeComponent();
 
 		// Call CopyDatabase on startup
-		CopyDatabaseOnStartup();
+		HandleDatabaseOnStartup();
 
 		MainPage = new AppShell();
 	}
 
-	private void CopyDatabaseOnStartup()
+	private void HandleDatabaseOnStartup()
 	{
+
 		try
 		{
-			OvertimeService.BackUpDatabase();
+			_overtimeService.HandleDatabase();
 		}
 		catch (Exception ex)
 		{

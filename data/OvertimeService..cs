@@ -1,4 +1,7 @@
 
+
+using Microsoft.EntityFrameworkCore;
+
 namespace Overtime;
 
 public class OvertimeService
@@ -12,20 +15,57 @@ public class OvertimeService
         _dbContext.Database.EnsureCreated();
     }
 
-    public void AddWorkedOvertime(WorkedOvertime workedOvertime)
+    public async Task<WorkedOvertime> AddAsync(WorkedOvertime workedOvertime)
     {
-        _dbContext.WorkedOvertimes.Add(workedOvertime);
+        await _dbContext.WorkedOvertimes.AddAsync(workedOvertime);
+        await _dbContext.SaveChangesAsync();
+
+        return workedOvertime;
+    }
+
+    public async Task<WorkedOvertime?> DeleteAsync(WorkedOvertime workedOvertime)
+    {
+        var item = await _dbContext.WorkedOvertimes.FindAsync(workedOvertime.Id);
+
+        if (item != null)
+        {
+            item.Deleted = true;
+            await _dbContext.SaveChangesAsync();
+        }
+
+        return item;
+    }
+
+    public async Task<WorkedOvertime?> UndoDeleteAsync(WorkedOvertime workedOvertime)
+    {
+        var item = await _dbContext.WorkedOvertimes.FindAsync(workedOvertime.Id);
+
+        if (item != null)
+        {
+            item.Deleted = false;
+            await _dbContext.SaveChangesAsync();
+        }
+
+        return item;
+    }
+
+    public void RemoveAllDeleted()
+    {
+        foreach (var item in _dbContext.WorkedOvertimes.Where(item => item.Deleted))
+        {
+            _dbContext.WorkedOvertimes.Remove(item);
+        }
+
         _dbContext.SaveChanges();
     }
 
-    public void DeleteWorkedOvertime(WorkedOvertime workedOvertime)
-    {
-        _dbContext.WorkedOvertimes.Remove(workedOvertime);
-        _dbContext.SaveChanges();
-    }
+    public async Task<List<WorkedOvertime>> GetAllAsync()
+        => await _dbContext.WorkedOvertimes
+            .OrderByDescending(overtime => overtime.Id)
+            .ToListAsync();
 
-    public List<WorkedOvertime> GetAllWorkedOvertimes() => 
-        _dbContext.WorkedOvertimes
+    public List<WorkedOvertime> GetAll() 
+        => _dbContext.WorkedOvertimes
             .OrderByDescending(overtime => overtime.Id)
             .ToList();
 
@@ -61,6 +101,11 @@ public class OvertimeService
         }
     }
 
+    public void HandleDatabase()
+    {
+        BackUpDatabase();
+        RemoveAllDeleted();
+    }
 
     public static string GetDatabaseSourcePath()
     {

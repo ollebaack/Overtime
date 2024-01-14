@@ -5,6 +5,7 @@
              x:Class="Overtime.App">
     <Application.Resources>
         <ResourceDictionary>
+            <local:InvertedBooleanConverter x:Key="InvertedBooleanConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />

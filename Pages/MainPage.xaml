@@ -42,7 +42,8 @@
                                 </StackLayout>
 
                                 <StackLayout Grid.Column="1" HorizontalOptions="EndAndExpand">
-                                    <Button Text="Delete" Clicked="OnDeleteClickedAsync" CommandParameter="{Binding .}" />
+                                    <Button Text="Delete" Clicked="OnDeleteClickedAsync" CommandParameter="{Binding .}" IsVisible="{Binding Deleted, Converter={StaticResource InvertedBooleanConverter}}" />
+                                    <Button Text="Restore" Clicked="OnUndoDeleteClickedAsync" CommandParameter="{Binding .}" IsVisible="{Binding Deleted}" />
                                 </StackLayout>
                             </Grid>
                         </ViewCell>
