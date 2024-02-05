@@ -51,7 +51,7 @@ public partial class MainPage : ContentPage
 
 	private async void OnSaveClickedAsync(object sender, EventArgs e)
 	{
-		if (double.TryParse(hoursEntry.Text, out double hours) && hours > 0)
+		if (double.TryParse(hoursEntry.Text, out double hours))
         {
             var addedItem = await _overtimeService.AddAsync(new(hours, DateTime.Now));
             hoursEntry.Text = "";
