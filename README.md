@@ -1,20 +1,34 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Overtime
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+A small .NET MAUI app for logging overtime hours. Entries are stored in a local SQLite database
+(`%LOCALAPPDATA%\OvertimeDb.db3`), which can be copied to a backup folder on every start.
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+## Install or update (Windows)
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+Run in PowerShell. No admin rights needed:
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+```powershell
+irm https://raw.githubusercontent.com/ollebaack/Overtime/main/install.ps1 | iex
+```
+
+This downloads the latest release to `%LOCALAPPDATA%\Programs\Overtime` and adds a Start menu
+shortcut. Run it again to update. Your data is kept.
+
+## Release
+
+Pushing a `v*` tag builds the Windows app and publishes it as a GitHub release:
+
+```sh
+git tag v1.2.0
+git push origin v1.2.0
+```
+
+Every push and pull request also builds the app; the zip is available as a workflow artifact.
+
+## Build locally
+
+Needs the .NET 10 SDK and the MAUI workload (`dotnet workload install maui-windows`).
+
+```sh
+dotnet build Overtime.csproj -f net10.0-windows10.0.19041.0 -p:TargetFrameworks=net10.0-windows10.0.19041.0
+```

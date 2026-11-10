@@ -29,7 +29,7 @@ namespace Overtime
             }
             catch (Exception ex)
             {
-                DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
+                DisplayAlertAsync("Error", $"An error occurred: {ex.Message}", "OK");
             }
         }
 
@@ -48,22 +48,22 @@ namespace Overtime
                     var oldFile = Path.Combine(oldPath, fileName);
                     if (OvertimeService.DeleteFileIfExists(oldFile))
                     {
-                        DisplayAlert("Success", $"Old backup file '{fileName}' deleted.", "OK");
+                        DisplayAlertAsync("Success", $"Old backup file '{fileName}' deleted.", "OK");
                     }
                     // Update the content of the file with the new text entered by the user
                     File.WriteAllText(path, backupPathEntry.Text);
-                    DisplayAlert("Success", "Backup destination updated successfully.", "OK");
+                    DisplayAlertAsync("Success", "Backup destination updated successfully.", "OK");
 
                     OvertimeService.BackUpDatabase();
                 }
                 else
                 {
-                    DisplayAlert("Success", "Backup destination is unchanged.", "OK");
+                    DisplayAlertAsync("Success", "Backup destination is unchanged.", "OK");
                 }
             }
             catch (Exception ex)
             {
-                DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
+                DisplayAlertAsync("Error", $"An error occurred: {ex.Message}", "OK");
             }
         }
 

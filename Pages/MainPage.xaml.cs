@@ -61,7 +61,7 @@ public partial class MainPage : ContentPage
         else
 		{
 			// Handle invalid input (not a valid positive integer)
-			await DisplayAlert("Error", "Please enter a valid positive number for hours.", "OK");
+			await DisplayAlertAsync("Error", "Please enter a valid positive number for hours.", "OK");
 		}
 	}
 
@@ -81,7 +81,7 @@ public partial class MainPage : ContentPage
 			catch (Exception ex)
 			{
 				// Handle the exception
-				await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
+				await DisplayAlertAsync("Error", $"An error occurred: {ex.Message}", "OK");
 			}
 		}
 	}
@@ -100,7 +100,7 @@ public partial class MainPage : ContentPage
 			catch (Exception ex)
 			{
 				// Handle the exception
-				await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
+				await DisplayAlertAsync("Error", $"An error occurred: {ex.Message}", "OK");
 			}
 		}
 
@@ -115,7 +115,7 @@ public partial class MainPage : ContentPage
         successLabel.IsVisible = true;
 
         // Fade out animation			
-        await successLabel.FadeTo(0, 7000); // 2000 milliseconds (adjust as needed)
+        await successLabel.FadeToAsync(0, 7000); // 2000 milliseconds (adjust as needed)
 
         // Hide the successLabel after the animation completes
         successLabel.IsVisible = false;

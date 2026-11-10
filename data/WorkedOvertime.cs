@@ -4,7 +4,7 @@ namespace Overtime
 {
     public record WorkedOvertime : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         private int id;
         public int Id

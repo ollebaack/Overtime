@@ -1,0 +1,58 @@
+name: Build and release
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  TFM: net10.0-windows10.0.19041.0
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Install MAUI workload
+        run: dotnet workload install maui-windows
+
+      - name: Determine version
+        id: version
+        shell: pwsh
+        run: |
+          # v1.2.3 tag -> 1.2.3; other builds -> 0.0.<run number>
+          $version = if ('${{ github.ref_type }}' -eq 'tag') { '${{ github.ref_name }}'.TrimStart('v') } else { '0.0.${{ github.run_number }}' }
+          "value=$version" >> $env:GITHUB_OUTPUT
+
+      # TargetFrameworks is narrowed to Windows so restore doesn't need the Android/iOS workloads.
+      - name: Publish
+        run: >
+          dotnet publish Overtime.csproj -c Release -r win-x64 --self-contained
+          -f ${{ env.TFM }} -p:TargetFrameworks=${{ env.TFM }}
+          -p:ApplicationDisplayVersion=${{ steps.version.outputs.value }}
+          -o publish
+
+      - name: Zip
+        shell: pwsh
+        run: Compress-Archive -Path publish/* -DestinationPath Overtime-win-x64.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Overtime-win-x64
+          path: Overtime-win-x64.zip
+
+      - name: Create GitHub release
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create ${{ github.ref_name }} Overtime-win-x64.zip --title "Overtime ${{ github.ref_name }}" --generate-notes

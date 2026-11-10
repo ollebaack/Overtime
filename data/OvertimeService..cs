@@ -7,7 +7,8 @@ namespace Overtime;
 public class OvertimeService
 {
     private readonly OvertimeDbContext _dbContext;
-    public const string BackupFileName = "backUpPath.txt";
+    // Kept in the app's data folder; a relative path would resolve to the (read-only) install folder.
+    public static readonly string BackupFileName = Path.Combine(FileSystem.AppDataDirectory, "backUpPath.txt");
 
     public OvertimeService()
     {

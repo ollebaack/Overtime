@@ -10,9 +10,9 @@ public partial class App : Application
 
 		// Call CopyDatabase on startup
 		HandleDatabaseOnStartup();
-
-		MainPage = new AppShell();
 	}
+
+	protected override Window CreateWindow(IActivationState? activationState) => new(new AppShell());
 
 	private void HandleDatabaseOnStartup()
 	{
