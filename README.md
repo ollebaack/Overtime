@@ -24,6 +24,10 @@ ot add 1,5                           Add hours today (1.5 works too; negative to
 ot add 2 --date 2026-11-09           Add hours on another day
 ot list [count | --all]              Show the latest entries (default 10)
 ot delete <id> / ot restore <id>     Delete an entry, or undo it
+ot backup                            Show the backup folder
+ot backup set <folder>               Set the backup folder (same as the app's Backup page) and back up now
+ot backup remove                     Stop backing up; existing backups are kept
+ot backup now                        Back up now
 ```
 
 Changes made while the app is open show up the next time it starts.

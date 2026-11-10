@@ -37,7 +37,6 @@ namespace Overtime
         {
             try
             {
-                var path = OvertimeService.BackupFileName;
                 var oldPath = OvertimeService.ReadDestinationPath();
 
                 if (oldPath != OvertimeService.EnsureEndSlash(backupPathEntry.Text))
@@ -51,7 +50,7 @@ namespace Overtime
                         DisplayAlertAsync("Success", $"Old backup file '{fileName}' deleted.", "OK");
                     }
                     // Update the content of the file with the new text entered by the user
-                    File.WriteAllText(path, backupPathEntry.Text);
+                    OvertimeService.SaveDestinationPath(backupPathEntry.Text);
                     DisplayAlertAsync("Success", "Backup destination updated successfully.", "OK");
 
                     OvertimeService.BackUpDatabase();

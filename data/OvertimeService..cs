@@ -7,8 +7,9 @@ namespace Overtime;
 public class OvertimeService
 {
     private readonly OvertimeDbContext _dbContext;
-    // Kept in the app's data folder; a relative path would resolve to the (read-only) install folder.
-    public static readonly string BackupFileName = Path.Combine(FileSystem.AppDataDirectory, "backUpPath.txt");
+    // Shared with the ot CLI, so it can't use MAUI's FileSystem.AppDataDirectory.
+    public static readonly string BackupFileName = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Overtime", "backUpPath.txt");
 
     public OvertimeService()
     {
@@ -140,6 +141,12 @@ public class OvertimeService
             // Handle the exception (e.g., log or rethrow)
             throw new InvalidOperationException($"Error reading destination path from 'backup.txt': {ex.Message}", ex);
         }
+    }
+
+    public static void SaveDestinationPath(string path)
+    {
+        EnsureFolderExists(Path.GetDirectoryName(BackupFileName)!);
+        File.WriteAllText(BackupFileName, path);
     }
 
     public static string EnsureEndSlash(string path)

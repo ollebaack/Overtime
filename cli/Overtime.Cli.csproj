@@ -18,6 +18,7 @@
 		<!-- Same database code as the app -->
 		<Compile Include="..\data\OvertimeDbContext.cs" Link="data\OvertimeDbContext.cs" />
 		<Compile Include="..\data\WorkedOvertime.cs" Link="data\WorkedOvertime.cs" />
+		<Compile Include="..\data\OvertimeService..cs" Link="data\OvertimeService.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

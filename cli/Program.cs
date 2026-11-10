@@ -24,6 +24,9 @@ switch (command)
     case "restore":
         return SetDeleted(args.Skip(1).ToArray(), deleted: false);
 
+    case "backup":
+        return Backup(args.Skip(1).ToArray());
+
     case "help" or "-h" or "--help" or "/?":
         PrintHelp();
         return 0;
@@ -119,6 +122,67 @@ int SetDeleted(string[] options, bool deleted)
     return 0;
 }
 
+int Backup(string[] options)
+{
+    var folder = BackupFolder();
+
+    switch (options.Length > 0 ? options[0].ToLowerInvariant() : "show")
+    {
+        case "show":
+            Console.WriteLine(folder is null
+                ? "No backup folder set. Set one with: ot backup set <folder>"
+                : $"Backup folder: {folder}\nThe app copies the data there every time it starts.");
+            return 0;
+
+        case "set":
+            if (options.Length < 2 || !Path.IsPathFullyQualified(options[1]))
+            {
+                Console.Error.WriteLine("Usage: ot backup set <full folder path>");
+                return 1;
+            }
+
+            OvertimeService.SaveDestinationPath(options[1]);
+            OvertimeService.BackUpDatabase();
+            Console.WriteLine($"Backup folder set to {BackupFolder()}. Backed up to {BackupFile()}.");
+            return 0;
+
+        case "remove":
+            if (folder is null)
+            {
+                Console.WriteLine("No backup folder set.");
+                return 0;
+            }
+
+            OvertimeService.SaveDestinationPath("");
+            Console.WriteLine($"Backup folder removed. Existing backups in {folder} are kept.");
+            return 0;
+
+        case "now":
+            if (folder is null)
+            {
+                Console.Error.WriteLine("No backup folder set. Set one with: ot backup set <folder>");
+                return 1;
+            }
+
+            OvertimeService.BackUpDatabase();
+            Console.WriteLine($"Backed up to {BackupFile()}.");
+            return 0;
+
+        default:
+            Console.Error.WriteLine("Usage: ot backup [set <folder> | remove | now]");
+            return 1;
+    }
+}
+
+static string? BackupFolder()
+{
+    var folder = OvertimeService.ReadDestinationPath().Trim();
+    return folder.Length == 0 ? null : Path.GetFullPath(folder).TrimEnd('\\', '/');
+}
+
+static string BackupFile()
+    => Path.Combine(BackupFolder()!, OvertimeService.GenerateCopyFileName(OvertimeService.GetDatabaseSourcePath()));
+
 void PrintTotal()
 {
     var total = db.WorkedOvertimes.Where(item => !item.Deleted).Sum(item => item.Hours);
@@ -143,6 +207,10 @@ static void PrintHelp()
           ot list [count | --all]             Show the latest entries (default 10)
           ot delete <id>                      Delete an entry
           ot restore <id>                     Undo a delete (until the app is next started)
+          ot backup                           Show the backup folder
+          ot backup set <folder>              Set the backup folder and back up now
+          ot backup remove                    Stop backing up (existing backups are kept)
+          ot backup now                       Back up now
           ot help                             Show this help
 
         Changes made while the app is open show up the next time it starts.
