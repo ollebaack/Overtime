@@ -12,7 +12,9 @@ public partial class App : Application
 		HandleDatabaseOnStartup();
 	}
 
-	protected override Window CreateWindow(IActivationState? activationState) => new(new AppShell());
+	// The version in the title shows which release is running, e.g. after an update.
+	protected override Window CreateWindow(IActivationState? activationState)
+		=> new(new AppShell()) { Title = $"Overtime {UpdateChecker.CurrentVersion}" };
 
 	private void HandleDatabaseOnStartup()
 	{
