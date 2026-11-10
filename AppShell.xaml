@@ -7,12 +7,12 @@
     Title="Overtime">
 
     <!-- Your Main Page -->
-    <FlyoutItem Title="Overtime Tracker" Icon="icon_tab1.png">
+    <FlyoutItem Title="Overtime Tracker" Icon="icon_tab1.png" Route="main">
         <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
     </FlyoutItem>
 
     <!-- Your New Page -->
-    <FlyoutItem Title="Backup" Icon="icon_tab2.png">
+    <FlyoutItem Title="Backup" Icon="icon_tab2.png" Route="backup">
         <ShellContent ContentTemplate="{DataTemplate local:BackupPage}" />
     </FlyoutItem>
 

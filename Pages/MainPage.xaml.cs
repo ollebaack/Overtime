@@ -38,6 +38,13 @@ public partial class MainPage : ContentPage
     	BindingContext = this;
 	}
 
+	protected override async void OnAppearing()
+	{
+		base.OnAppearing();
+
+		await BackupReminderPage.ShowIfNeededAsync(Navigation);
+	}
+
 	private void LoadWorkedOvertimes()
 	{
 		foreach (var item in _overtimeService.GetAll())
