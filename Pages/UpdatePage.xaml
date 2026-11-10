@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Overtime.UpdatePage"
+             BackgroundColor="#80000000">
+
+    <Border WidthRequest="480"
+            Padding="24"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            StrokeShape="RoundRectangle 8"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
+
+        <VerticalStackLayout Spacing="16">
+            <Label x:Name="titleLabel" Style="{StaticResource SubHeadline}" HorizontalOptions="Start" />
+            <Label x:Name="versionLabel" />
+
+            <ScrollView MaximumHeightRequest="240">
+                <Label x:Name="notesLabel" FontSize="12" />
+            </ScrollView>
+
+            <HorizontalStackLayout Spacing="8" HorizontalOptions="End">
+                <Button Text="Skip this version" Clicked="OnSkipClickedAsync" />
+                <Button Text="Later" Clicked="OnLaterClickedAsync" />
+                <Button Text="Update now" Clicked="OnUpdateClicked" />
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </Border>
+
+</ContentPage>

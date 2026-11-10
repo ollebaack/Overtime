@@ -50,6 +50,7 @@ public partial class MainPage : ContentPage
 		}
 
 		await BackupReminderPage.ShowIfNeededAsync(Navigation);
+		await UpdatePage.ShowIfAvailableAsync(Navigation);
 	}
 
 	private bool reloadsOnActivate;

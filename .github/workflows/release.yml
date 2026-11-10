@@ -18,6 +18,8 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0  # full history and tags, for the release notes
 
       - uses: actions/setup-dotnet@v5
         with:
@@ -61,4 +63,11 @@ jobs:
         if: github.ref_type == 'tag'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create ${{ github.ref_name }} Overtime-win-x64.zip --title "Overtime ${{ github.ref_name }}" --generate-notes
+        shell: pwsh
+        run: |
+          # Release notes are the commit subjects since the previous tag (the app shows them when offering the update).
+          $tag = '${{ github.ref_name }}'
+          $previous = git describe --tags --abbrev=0 "$tag^" 2>$null
+          $range = if ($previous) { "$previous..$tag" } else { $tag }
+          git log --no-merges --pretty='- %s' $range | Out-File notes.md
+          gh release create $tag Overtime-win-x64.zip --title "Overtime $tag" --notes-file notes.md
