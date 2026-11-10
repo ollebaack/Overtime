@@ -1,6 +1,7 @@
 # Overtime
 
-A small .NET MAUI app for logging overtime hours. Entries are stored in a local SQLite database
+A small .NET MAUI app for logging overtime hours, with a Statistics tab that charts your balance and
+hours per month. Entries are stored in a local SQLite database
 (`%LOCALAPPDATA%\OvertimeDb.db3`), which can be copied to a backup folder on every start.
 
 ## Install or update (Windows)
@@ -12,7 +13,8 @@ irm https://raw.githubusercontent.com/ollebaack/Overtime/main/install.ps1 | iex
 ```
 
 This downloads the latest release to `%LOCALAPPDATA%\Programs\Overtime` and adds a Start menu
-shortcut. Run it again to update. Your data is kept.
+shortcut. When a new version is released, the app offers to update itself on startup (you can also
+run the command again). Your data is kept.
 
 ## Command line
 
@@ -23,6 +25,7 @@ ot                                   Show total overtime
 ot add 1,5                           Add hours today (1.5 works too; negative to use time off)
 ot add 2 --date 2026-11-09           Add hours on another day
 ot list [count | --all]              Show the latest entries (default 10)
+ot stats                             Show balance, averages and hours per month
 ot delete <id> / ot restore <id>     Delete an entry, or undo it
 ot backup                            Show the backup folder
 ot backup set <folder>               Set the backup folder (same as the app's Backup page) and back up now

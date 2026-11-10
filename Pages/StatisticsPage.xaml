@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             x:Class="Overtime.StatisticsPage">
+
+    <ContentPage.Resources>
+        <Style x:Key="TileCaption" TargetType="Label">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="TextColor" Value="#898781" />
+        </Style>
+        <Style x:Key="TileValue" TargetType="Label">
+            <Setter Property="FontSize" Value="24" />
+        </Style>
+        <Style x:Key="ChartTitle" TargetType="Label">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        </Style>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="12">
+
+            <Grid ColumnDefinitions="*,*,*,*,*" ColumnSpacing="16" Margin="0,0,0,12">
+                <VerticalStackLayout Grid.Column="0">
+                    <Label Text="Balance" Style="{StaticResource TileCaption}" />
+                    <Label x:Name="balanceLabel" Style="{StaticResource TileValue}" FontSize="32" FontFamily="OpenSansSemibold" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="1">
+                    <Label Text="This month" Style="{StaticResource TileCaption}" />
+                    <Label x:Name="thisMonthLabel" Style="{StaticResource TileValue}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="2">
+                    <Label Text="Last month" Style="{StaticResource TileCaption}" />
+                    <Label x:Name="lastMonthLabel" Style="{StaticResource TileValue}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="3">
+                    <Label x:Name="averageCaption" Style="{StaticResource TileCaption}" />
+                    <Label x:Name="averageLabel" Style="{StaticResource TileValue}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="4">
+                    <Label Text="Average per month, last 6 months" Style="{StaticResource TileCaption}" />
+                    <Label x:Name="recentAverageLabel" Style="{StaticResource TileValue}" />
+                </VerticalStackLayout>
+            </Grid>
+
+            <Label Text="Balance over time" Style="{StaticResource ChartTitle}" />
+            <lvc:CartesianChart x:Name="balanceChart" HeightRequest="260" />
+
+            <Label Text="Hours per month, last 12 months" Style="{StaticResource ChartTitle}" Margin="0,16,0,0" />
+            <lvc:CartesianChart x:Name="monthChart" HeightRequest="280" LegendPosition="Top" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

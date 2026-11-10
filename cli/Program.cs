@@ -27,6 +27,10 @@ switch (command)
     case "backup":
         return Backup(args.Skip(1).ToArray());
 
+    case "stats":
+        PrintStats();
+        return 0;
+
     case "help" or "-h" or "--help" or "/?":
         PrintHelp();
         return 0;
@@ -183,6 +187,30 @@ static string? BackupFolder()
 static string BackupFile()
     => Path.Combine(BackupFolder()!, OvertimeService.GenerateCopyFileName(OvertimeService.GetDatabaseSourcePath()));
 
+void PrintStats()
+{
+    var stats = new OvertimeStatistics(db.WorkedOvertimes.ToList(), DateTime.Today);
+    var since = stats.Months.Count > 0 ? stats.Months[0].Month.ToString("yyyy-MM") : "";
+
+    Console.WriteLine($"Balance:            {FormatHours(stats.Balance)} h");
+    Console.WriteLine($"This month:         {FormatSigned(stats.ThisMonth)} h");
+    Console.WriteLine($"Last month:         {FormatSigned(stats.LastMonth)} h");
+    Console.WriteLine($"Average per month:  {FormatSigned(stats.AveragePerMonth)} h (whole months since {since})");
+    Console.WriteLine($"Last 6 months:      {FormatSigned(stats.RecentAveragePerMonth)} h per month");
+    Console.WriteLine();
+    Console.WriteLine("Hours per month (# overtime, - time off):");
+
+    var recent = stats.Months.TakeLast(12).ToList();
+    var largest = Math.Max(1, recent.Max(month => Math.Abs(month.Hours)));
+    foreach (var month in recent)
+    {
+        var bar = new string(month.Hours >= 0 ? '#' : '-', (int)Math.Round(Math.Abs(month.Hours) / largest * 30));
+        Console.WriteLine($"  {month.Month:yyyy-MM}  {FormatSigned(month.Hours),7}  {bar}");
+    }
+}
+
+static string FormatSigned(double hours) => (hours > 0 ? "+" : "") + FormatHours(hours);
+
 void PrintTotal()
 {
     var total = db.WorkedOvertimes.Where(item => !item.Deleted).Sum(item => item.Hours);
@@ -205,6 +233,7 @@ static void PrintHelp()
           ot [total]                          Show total overtime
           ot add <hours> [--date yyyy-MM-dd]  Add hours (negative to use time off), default today
           ot list [count | --all]             Show the latest entries (default 10)
+          ot stats                            Show averages and hours per month
           ot delete <id>                      Delete an entry
           ot restore <id>                     Undo a delete (until the app is next started)
           ot backup                           Show the backup folder

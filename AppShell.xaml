@@ -11,6 +11,10 @@
         <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
     </FlyoutItem>
 
+    <FlyoutItem Title="Statistics" Route="stats">
+        <ShellContent ContentTemplate="{DataTemplate local:StatisticsPage}" />
+    </FlyoutItem>
+
     <!-- Your New Page -->
     <FlyoutItem Title="Backup" Icon="icon_tab2.png" Route="backup">
         <ShellContent ContentTemplate="{DataTemplate local:BackupPage}" />
