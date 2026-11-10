@@ -24,4 +24,18 @@ $shortcut.TargetPath = Join-Path $installDir 'Overtime.exe'
 $shortcut.WorkingDirectory = $installDir
 $shortcut.Save()
 
-Write-Host "Overtime $($release.tag_name) installed to $installDir. Start it from the Start menu."
+# Put the install folder on the user's PATH so the "ot" CLI works from any terminal.
+# Edited in the registry so entries like %USERPROFILE%\... stay unexpanded.
+$envKey = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Environment', $true)
+$userPath = $envKey.GetValue('Path', '', 'DoNotExpandEnvironmentNames')
+if (($userPath -split ';') -notcontains $installDir) {
+    $entries = @($userPath -split ';' | Where-Object { $_ }) + $installDir
+    $envKey.SetValue('Path', ($entries -join ';'), 'ExpandString')
+    # Setting and clearing a variable broadcasts the change, so new terminals pick up the PATH.
+    [Environment]::SetEnvironmentVariable('OVERTIME_INSTALL', '1', 'User')
+    [Environment]::SetEnvironmentVariable('OVERTIME_INSTALL', $null, 'User')
+    Write-Host "Added $installDir to your PATH. Open a new terminal to use 'ot'."
+}
+$envKey.Close()
+
+Write-Host "Overtime $($release.tag_name) installed to $installDir. Start it from the Start menu, or run 'ot help'."

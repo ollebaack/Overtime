@@ -61,6 +61,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<!-- The CLI is its own project in cli\ -->
+		<Compile Remove="cli\**" />
+		<None Remove="cli\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.14" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.14" />

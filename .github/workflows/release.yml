@@ -42,6 +42,12 @@ jobs:
           -p:ApplicationDisplayVersion=${{ steps.version.outputs.value }}
           -o publish
 
+      - name: Publish CLI
+        run: >
+          dotnet publish cli/Overtime.Cli.csproj -c Release -r win-x64 --self-contained
+          -p:DebugType=None
+          -o publish
+
       - name: Zip
         shell: pwsh
         run: Compress-Archive -Path publish/* -DestinationPath Overtime-win-x64.zip
