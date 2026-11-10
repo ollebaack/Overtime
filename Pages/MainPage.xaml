@@ -13,6 +13,7 @@
 
             <StackLayout>
                 <Label
+                    x:Name="totalTitleLabel"
                     Margin="10"
                     Style="{StaticResource Headline}" 
                     Text="Total Overtime" />

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Overtime"
+             x:Class="Overtime.EarlierYearsPage">
+
+    <Grid Padding="20" RowDefinitions="Auto,*">
+        <Label x:Name="emptyLabel" Grid.Row="0" Text="No entries from earlier years." IsVisible="False" Margin="10" />
+
+        <!-- One folder per year; click a year to open or close it. -->
+        <CollectionView Grid.Row="1" x:Name="yearsView" IsGrouped="True">
+            <CollectionView.GroupHeaderTemplate>
+                <DataTemplate x:DataType="local:YearGroup">
+                    <Grid Padding="10,14,10,6" ColumnDefinitions="*,Auto" BackgroundColor="Transparent">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnYearTapped" CommandParameter="{Binding .}" />
+                        </Grid.GestureRecognizers>
+                        <Label Grid.Column="0" Text="{Binding Title}" Style="{StaticResource SubHeadline}" HorizontalOptions="Start" />
+                        <Label Grid.Column="1" Text="{Binding Summary}" VerticalOptions="Center" TextColor="#898781" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.GroupHeaderTemplate>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="local:WorkedOvertime">
+                    <VerticalStackLayout Margin="30,6,10,6">
+                        <Label Text="{Binding Hours, StringFormat='Hours: {0}'}" />
+                        <Label Text="{Binding Date, StringFormat='Date: {0:d}'}" />
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+
+</ContentPage>

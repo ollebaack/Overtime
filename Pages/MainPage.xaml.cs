@@ -59,7 +59,11 @@ public partial class MainPage : ContentPage
 	{
 		overtimeItems.Clear();
 
-		foreach (var item in _overtimeService.GetAll())
+		// This page is the current year; earlier years have their own tab.
+		var thisYear = DateTime.Today.Year;
+		totalTitleLabel.Text = $"Total Overtime {thisYear}";
+
+		foreach (var item in _overtimeService.GetAll().Where(item => item.Date.Year == thisYear))
 		{
 			overtimeItems.Add(item);
 		}
