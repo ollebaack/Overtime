@@ -30,7 +30,7 @@ ot backup remove                     Stop backing up; existing backups are kept
 ot backup now                        Back up now
 ```
 
-Changes made while the app is open show up the next time it starts.
+If the app is open, it picks up changes made with `ot` when you switch back to it.
 
 ## Release
 

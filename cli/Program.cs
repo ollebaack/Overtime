@@ -213,6 +213,6 @@ static void PrintHelp()
           ot backup now                       Back up now
           ot help                             Show this help
 
-        Changes made while the app is open show up the next time it starts.
+        If the app is open, it picks up changes when you switch back to it.
         """);
 }

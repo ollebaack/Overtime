@@ -66,10 +66,15 @@ public class OvertimeService
             .OrderByDescending(overtime => overtime.Id)
             .ToListAsync();
 
-    public List<WorkedOvertime> GetAll() 
-        => _dbContext.WorkedOvertimes
+    public List<WorkedOvertime> GetAll()
+    {
+        // Forget cached entries so changes made by the ot CLI are read from the database.
+        _dbContext.ChangeTracker.Clear();
+
+        return _dbContext.WorkedOvertimes
             .OrderByDescending(overtime => overtime.Id)
             .ToList();
+    }
 
     public static void BackUpDatabase()
     {
@@ -159,24 +164,6 @@ public class OvertimeService
         return path;
     }
 
-    public static bool DeleteFileIfExists(string filePath)
-    {
-        if (File.Exists(filePath))
-        {
-            File.Delete(filePath);
-
-            // Try to delete the parent folder if it's empty
-            string? folderPath = Path.GetDirectoryName(filePath);
-            if (Directory.Exists(folderPath) && !Directory.EnumerateFileSystemEntries(folderPath).Any())
-            {
-                Directory.Delete(folderPath);
-            }
-
-            return true;
-        }
-
-        return false;
-    }
     public static void EnsureFolderExists(string folderPath)
     {
         if (!Directory.Exists(folderPath))

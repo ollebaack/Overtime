@@ -42,11 +42,22 @@ public partial class MainPage : ContentPage
 	{
 		base.OnAppearing();
 
+		// Reload when switching back to the app, to show changes made with the ot CLI.
+		if (!reloadsOnActivate && Window is not null)
+		{
+			Window.Activated += (_, _) => LoadWorkedOvertimes();
+			reloadsOnActivate = true;
+		}
+
 		await BackupReminderPage.ShowIfNeededAsync(Navigation);
 	}
 
+	private bool reloadsOnActivate;
+
 	private void LoadWorkedOvertimes()
 	{
+		overtimeItems.Clear();
+
 		foreach (var item in _overtimeService.GetAll())
 		{
 			overtimeItems.Add(item);

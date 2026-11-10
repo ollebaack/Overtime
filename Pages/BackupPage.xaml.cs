@@ -41,15 +41,7 @@ namespace Overtime
 
                 if (oldPath != OvertimeService.EnsureEndSlash(backupPathEntry.Text))
                 {
-                    var sourcePath = OvertimeService.GetDatabaseSourcePath();
-                    var fileName = OvertimeService.GenerateCopyFileName(sourcePath);
-
-                    var oldFile = Path.Combine(oldPath, fileName);
-                    if (OvertimeService.DeleteFileIfExists(oldFile))
-                    {
-                        DisplayAlertAsync("Success", $"Old backup file '{fileName}' deleted.", "OK");
-                    }
-                    // Update the content of the file with the new text entered by the user
+                    // Backups in the old folder are kept.
                     OvertimeService.SaveDestinationPath(backupPathEntry.Text);
                     DisplayAlertAsync("Success", "Backup destination updated successfully.", "OK");
 
