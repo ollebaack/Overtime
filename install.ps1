@@ -14,9 +14,9 @@ Write-Host "Downloading Overtime $($release.tag_name)..."
 Invoke-WebRequest $asset.browser_download_url -OutFile $zip
 
 # The data (OvertimeDb.db3) lives in %LOCALAPPDATA%, not in the install folder, so replacing it is safe.
-if (Test-Path $installDir) { Remove-Item $installDir -Recurse -Force }
-Expand-Archive $zip -DestinationPath $installDir
-Remove-Item $zip
+if (Test-Path -LiteralPath $installDir) { Remove-Item -LiteralPath $installDir -Recurse -Force }
+Expand-Archive -LiteralPath $zip -DestinationPath $installDir
+Remove-Item -LiteralPath $zip
 
 $shortcut = (New-Object -ComObject WScript.Shell).CreateShortcut(
     (Join-Path ([Environment]::GetFolderPath('Programs')) 'Overtime.lnk'))
