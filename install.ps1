@@ -9,15 +9,19 @@ $release = Invoke-RestMethod 'https://api.github.com/repos/ollebaack/Overtime/re
 $asset = $release.assets | Where-Object name -eq 'Overtime-win-x64.zip'
 if (-not $asset) { throw "Release $($release.tag_name) has no Overtime-win-x64.zip." }
 
-Get-Process Overtime -ErrorAction SilentlyContinue | Stop-Process -Force
+$running = Get-Process Overtime -ErrorAction SilentlyContinue
+$running | Stop-Process -Force
+$running | Wait-Process -Timeout 15 -ErrorAction SilentlyContinue
 
 $zip = Join-Path $env:TEMP 'Overtime-win-x64.zip'
 Write-Host "Downloading Overtime $($release.tag_name)..."
 Invoke-WebRequest $asset.browser_download_url -OutFile $zip
 
 # The data (OvertimeDb.db3) lives in %LOCALAPPDATA%, not in the install folder, so replacing it is safe.
-if (Test-Path -LiteralPath $installDir) { Remove-Item -LiteralPath $installDir -Recurse -Force }
-Expand-Archive -LiteralPath $zip -DestinationPath $installDir
+# Empty the folder rather than deleting it: a folder can't be deleted while a process has it as its
+# current directory, and the app's "Update now" starts PowerShell there.
+if (Test-Path -LiteralPath $installDir) { Get-ChildItem -LiteralPath $installDir -Force | Remove-Item -Recurse -Force }
+Expand-Archive -LiteralPath $zip -DestinationPath $installDir -Force
 [IO.File]::Delete($zip)  # Remove-Item fails on 8.3 temp paths such as OLLE~1.BAC
 
 $shortcut = (New-Object -ComObject WScript.Shell).CreateShortcut(

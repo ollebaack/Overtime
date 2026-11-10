@@ -83,6 +83,8 @@ public static class UpdateChecker
             FileName = "powershell.exe",
             Arguments = "-NoProfile -ExecutionPolicy Bypass -EncodedCommand " + Convert.ToBase64String(Encoding.Unicode.GetBytes(script)),
             UseShellExecute = true,
+            // Not the install folder, which the installer empties.
+            WorkingDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         });
     }
 
