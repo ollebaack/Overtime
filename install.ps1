@@ -1,6 +1,8 @@
 # Installs or updates Overtime from the latest GitHub release. No admin rights needed.
 #   irm https://raw.githubusercontent.com/ollebaack/Overtime/main/install.ps1 | iex
 $ErrorActionPreference = 'Stop'
+# Windows PowerShell's progress bar makes Invoke-WebRequest and Expand-Archive many times slower.
+$ProgressPreference = 'SilentlyContinue'
 
 $installDir = Join-Path $env:LOCALAPPDATA 'Programs\Overtime'
 $release = Invoke-RestMethod 'https://api.github.com/repos/ollebaack/Overtime/releases/latest'
